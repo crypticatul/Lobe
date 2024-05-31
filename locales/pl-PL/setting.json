@@ -2,6 +2,14 @@
   "about": {
     "title": "O nas"
   },
+  "agentTab": {
+    "chat": "Preferencje czatu",
+    "meta": "Informacje o asystencie",
+    "modal": "Ustawienia modalne",
+    "plugin": "Ustawienia wtyczki",
+    "prompt": "Ustawienia roli",
+    "tts": "Usługi głosowe"
+  },
   "analytics": {
     "telemetry": {
       "desc": "Poprzez wybór wysyłania danych telemetrycznych możesz pomóc nam poprawić ogólny użytkowy interfejs LobeChat",
@@ -22,171 +30,92 @@
       "confirm": "Potwierdź zresetowanie wszystkich ustawień?",
       "currentVersion": "Aktualna wersja",
       "desc": "Zresetuj wszystkie ustawienia do wartości domyślnych",
+      "success": "Wszystkie ustawienia zostały zresetowane",
       "title": "Zresetuj wszystkie ustawienia"
     }
   },
   "header": {
+    "desc": "Preferencje i ustawienia modelu.",
     "global": "Ustawienia globalne",
     "session": "Ustawienia sesji",
-    "sessionWithName": "Ustawienia sesji · {{name}}"
+    "sessionDesc": "Ustawienia postaci i preferencje sesji.",
+    "sessionWithName": "Ustawienia sesji · {{name}}",
+    "title": "Ustawienia"
   },
   "llm": {
-    "Anthropic": {
-      "title": "Antropijny",
-      "token": {
-        "desc": "Wprowadź klucz API z Anthropic",
-        "placeholder": "Klucz API Anthropic",
-        "title": "Klucz API"
-      }
-    },
-    "AzureOpenAI": {
-      "azureApiVersion": {
-        "desc": "Wersja API usługi Azure, zgodna z formatem RRRR-MM-DD, zobacz [najnowszą wersję](https://learn.microsoft.com/pl-pl/azure/ai-services/openai/reference#chat-completions)",
-        "fetch": "Pobierz listę",
-        "title": "Wersja interfejsu API usługi Azure"
-      },
-      "deployments": {
-        "desc": "Użyj składni id=nazwa, aby wprowadzić listę modeli wdrożeń (np. jeśli nazwa modelu i wdrożenia są takie same, można wpisać tylko nazwę modelu), użyj przecinka (,) do oddzielenia wielu modeli",
-        "title": "Lista wdrożeń usługi Azure"
-      },
-      "endpoint": {
-        "desc": "Wartość znajdująca się w sekcji „Klucze i punkty końcowe” podczas sprawdzania zasobów w portalu Azure",
-        "placeholder": "https://docs-test-001.openai.azure.com",
-        "title": "Adres API Azure"
-      },
-      "models": {
-        "desc": "Lista obsługiwanych modeli",
-        "title": "Lista modeli"
-      },
-      "title": "Ustawienia Azure OpenAI",
-      "token": {
-        "desc": "Wartość znajdująca się w sekcji „Klucze i punkty końcowe” podczas sprawdzania zasobów w portalu Azure. Można użyć KLUCZ1 lub KLUCZ2",
-        "placeholder": "Klucz API Azure",
-        "title": "Klucz API"
-      }
-    },
-    "Bedrock": {
-      "accessKeyId": {
-        "desc": "Wprowadź Aws Access Key Id",
-        "placeholder": "Aws Access Key Id",
-        "title": "Aws Access Key Id"
-      },
-      "checker": {
-        "desc": "Sprawdź poprawność wypełnienia AccessKeyId / SecretAccessKey"
-      },
-      "region": {
-        "desc": "Wprowadź region Aws",
-        "placeholder": "Aws Region",
-        "title": "Aws Region"
-      },
-      "secretAccessKey": {
-        "desc": "Wprowadź Aws Secret Access Key",
-        "placeholder": "Aws Secret Access Key",
-        "title": "Aws Secret Access Key"
-      },
-      "title": "Bedrock"
-    },
-    "Google": {
-      "title": "Google",
-      "token": {
-        "desc": "Wprowadź klucz API z Google",
-        "placeholder": "Google API Key",
-        "title": "Klucz API"
-      }
-    },
-    "Mistral": {
-      "title": "Mistral AI",
-      "token": {
-        "desc": "Wprowadź klucz API Mistral AI",
-        "placeholder": "Klucz API Mistral AI",
-        "title": "Klucz API"
-      }
-    },
-    "Moonshot": {
-      "title": "Ciemna strona Księżyca",
-      "token": {
-        "desc": "Wprowadź klucz API od Moonshot AI",
-        "placeholder": "Klucz API Moonshot AI",
-        "title": "Klucz API"
-      }
-    },
-    "Ollama": {
-      "checker": {
-        "desc": "Sprawdź, czy adres proxy jest poprawnie wypełniony"
-      },
-      "customModelName": {
-        "desc": "Dodaj niestandardowy model, używając przecinka (,) do oddzielenia wielu modeli",
-        "placeholder": "wikuna,llama,codellama,llama2:13b-text",
-        "title": "Nazwa niestandardowego modelu"
-      },
-      "endpoint": {
-        "desc": "Wprowadź adres proxy interfejsu Ollama, pozostaw puste, jeśli nie jest lokalnie określony",
-        "placeholder": "http://127.0.0.1:11434/v1",
-        "title": "Adres proxy interfejsu"
-      },
-      "title": "Ollama"
-    },
-    "OpenAI": {
-      "azureApiVersion": {
-        "desc": "Wersja API dla usługi Azure, zgodna z formatem RRRR-MM-DD. Zobacz [najnowszą wersję](https://learn.microsoft.com/pl-pl/azure/ai-services/openai/reference#chat-completions)",
-        "fetch": "Pobierz listę",
-        "title": "Wersja interfejsu API Azure"
-      },
-      "customModelName": {
-        "desc": "Dodaj niestandardowe modele, oddzielając je przecinkami (,)",
-        "placeholder": "model1,model2,model3",
-        "title": "Nazwa niestandardowego modelu"
-      },
-      "endpoint": {
-        "desc": "Oprócz domyślnego adresu, musi zawierać http(s)://",
-        "placeholder": "https://api.openai.com/v1",
-        "title": "Adres proxy interfejsu"
-      },
-      "models": {
-        "count": "Łącznie obsługiwane jest {{count}} modeli",
-        "desc": "Lista obsługiwanych modeli",
-        "fetch": "Pobierz listę modeli",
-        "notSupport": "Azure OpenAI tymczasowo nie obsługuje wyświetlania listy modeli",
-        "notSupportTip": "Musisz samodzielnie upewnić się, że nazwa wdrożenia jest zgodna z nazwą modelu",
-        "refetch": "Pobierz listę modeli ponownie",
-        "title": "Lista modeli"
-      },
-      "title": "Ustawienia OpenAI",
-      "token": {
-        "desc": "Użyj własnego klucza API OpenAI",
-        "placeholder": "Klucz API OpenAI",
-        "title": "Klucz API"
-      },
-      "useAzure": {
-        "desc": "Użyj usługi OpenAI dostarczanej przez Azure",
-        "fetch": "Pobierz listę",
-        "serverConfig": "Administrator skonfigurował usługę Azure OpenAI po stronie serwera, co uniemożliwia przełączenie",
-        "title": "Użyj Azure OpenAI"
-      }
-    },
-    "Perplexity": {
-      "title": "Perplexity",
-      "token": {
-        "desc": "Wprowadź klucz API od Perplexity AI",
-        "placeholder": "Klucz API Perplexity AI",
-        "title": "Klucz API"
-      }
-    },
-    "Zhipu": {
-      "title": "智谱",
-      "token": {
-        "desc": "Wprowadź klucz API z Zhipu",
-        "placeholder": "Zhipu API Key",
-        "title": "Klucz API"
-      }
-    },
     "checker": {
       "button": "Sprawdź",
       "desc": "Sprawdź poprawność wypełnienia klucza API i adresu proxy",
       "pass": "Połączenie udane",
       "title": "Test połączenia"
     },
+    "customModelCards": {
+      "addNew": "Utwórz i dodaj model {{id}}",
+      "config": "Konfiguracja modelu",
+      "confirmDelete": "Czy na pewno chcesz usunąć ten niestandardowy model? Po usunięciu nie będzie możliwe przywrócenie. Proszę działać ostrożnie.",
+      "modelConfig": {
+        "azureDeployName": {
+          "extra": "Pole faktycznego żądania w Azure OpenAI",
+          "placeholder": "Wprowadź nazwę wdrożenia modelu w Azure",
+          "title": "Nazwa wdrożenia modelu"
+        },
+        "displayName": {
+          "placeholder": "Wprowadź nazwę wyświetlaną modelu, np. ChatGPT, GPT-4 itp.",
+          "title": "Nazwa wyświetlana modelu"
+        },
+        "files": {
+          "extra": "Obecna implementacja przesyłania plików w LobeChat to tylko tymczasowe rozwiązanie, przeznaczone wyłącznie do własnego użytku. Pełna funkcjonalność przesyłania plików będzie dostępna w przyszłości",
+          "title": "Obsługa przesyłania plików"
+        },
+        "functionCall": {
+          "extra": "Ta konfiguracja aktywuje tylko możliwość wywoływania funkcji w LobeChat. Możliwość obsługi wywołań funkcji zależy wyłącznie od samego modelu. Proszę przetestować dostępność wywołań funkcji tego modelu",
+          "title": "Obsługa wywołań funkcji"
+        },
+        "id": {
+          "extra": "Będzie wyświetlane jako etykieta modelu",
+          "placeholder": "Wprowadź identyfikator modelu, np. gpt-4-turbo-preview lub claude-2.1",
+          "title": "Identyfikator modelu"
+        },
+        "modalTitle": "Konfiguracja niestandardowego modelu",
+        "tokens": {
+          "title": "Maksymalna liczba tokenów",
+          "unlimited": "Nieograniczony"
+        },
+        "vision": {
+          "extra": "Ta konfiguracja aktywuje tylko możliwość przesyłania obrazów w LobeChat. Możliwość rozpoznawania zależy wyłącznie od modelu. Proszę przetestować dostępność rozpoznawania wizyjnego tego modelu",
+          "title": "Obsługa rozpoznawania wizyjnego"
+        }
+      }
+    },
+    "fetchOnClient": {
+      "desc": "使用客户端请求模式，浏览器将直接发起会话请求，以提升响应速度",
+      "title": "使用客户端请求模式"
+    },
+    "fetcher": {
+      "fetch": "Pobierz listę modeli",
+      "fetching": "Trwa pobieranie listy modeli...",
+      "latestTime": "Ostatnia aktualizacja: {{time}}",
+      "noLatestTime": "Brak dostępnej listy"
+    },
+    "modelList": {
+      "desc": "Wybierz modele do wyświetlenia w sesji. Wybrane modele będą widoczne na liście modeli",
+      "placeholder": "Wybierz model z listy",
+      "title": "Lista modeli",
+      "total": "Razem dostępne są {{count}} modele"
+    },
+    "proxyUrl": {
+      "desc": "Oprócz domyślnego adresu, musi zawierać http(s)://",
+      "title": "Adres proxy API"
+    },
     "waitingForMore": "Więcej modeli jest obecnie w <1>planach dołączenia</1>, prosimy o cierpliwość ✨"
+  },
+  "ollama": {
+    "download": {
+      "desc": "Ollama pobiera ten model. Prosimy nie zamykać tej strony. Gdy pobieranie zostanie wznowione, będzie kontynuowane od miejsca przerwania.",
+      "remainingTime": "Czas pozostały",
+      "speed": "Prędkość pobierania",
+      "title": "Pobieranie modelu {{model}}"
+    }
   },
   "plugin": {
     "addTooltip": "Dodaj niestandardowy dodatek",
@@ -253,6 +182,7 @@
     "enableHistoryCount": {
       "alias": "Bez limitu",
       "limited": "Zawiera tylko {{number}} wiadomości",
+      "setlimited": "Ustaw limit wiadomości historycznych",
       "title": "Ograniczenie liczby wiadomości w historii",
       "unlimited": "Bez limitu wiadomości w historii"
     },
@@ -334,6 +264,7 @@
   "settingTTS": {
     "openai": {
       "sttModel": "Model rozpoznawania mowy OpenAI",
+      "title": "OpenAI",
       "ttsModel": "Model syntezy mowy OpenAI"
     },
     "showAllLocaleVoice": {
@@ -403,11 +334,61 @@
     "placeholder": "Wprowadź identyfikator asystenta, musi być unikalny, na przykład web-development",
     "tooltips": "Udostępnij na rynku asystentów"
   },
+  "sync": {
+    "device": {
+      "deviceName": {
+        "hint": "Dodaj nazwę, aby ułatwić identyfikację",
+        "placeholder": "Wprowadź nazwę urządzenia",
+        "title": "Nazwa urządzenia"
+      },
+      "title": "Informacje o urządzeniu",
+      "unknownBrowser": "Nieznana przeglądarka",
+      "unknownOS": "Nieznany system"
+    },
+    "warning": {
+      "message": "Ta funkcja jest obecnie eksperymentalna i może działać nieprzewidywalnie lub niestabilnie. W przypadku problemów prosimy o natychmiastowe zgłoszenie opinii."
+    },
+    "webrtc": {
+      "channelName": {
+        "desc": "WebRTC użyje tej nazwy do utworzenia kanału synchronizacji, upewnij się, że nazwa kanału jest unikalna",
+        "placeholder": "Wprowadź nazwę kanału synchronizacji",
+        "shuffle": "Wygeneruj losowo",
+        "title": "Nazwa kanału synchronizacji"
+      },
+      "channelPassword": {
+        "desc": "Dodaj hasło, aby zapewnić prywatność kanału. Tylko urządzenia z poprawnym hasłem mogą dołączyć do kanału",
+        "placeholder": "Wprowadź hasło kanału synchronizacji",
+        "title": "Hasło kanału synchronizacji"
+      },
+      "desc": "Bezpośrednia, punkt-do-punktu komunikacja danych w czasie rzeczywistym, wymaga jednoczesnej obecności urządzeń online do synchronizacji",
+      "enabled": {
+        "invalid": "Wprowadź nazwę kanału synchronizacji przed włączeniem",
+        "title": "Włącz synchronizację"
+      },
+      "title": "Synchronizacja WebRTC"
+    }
+  },
+  "systemAgent": {
+    "title": "Asystent Systemowy",
+    "topic": {
+      "label": "Model nazewnictwa tematów",
+      "modelDesc": "Określa model używany do automatycznego zmieniania nazw tematów",
+      "title": "Automatyczne nadawanie nazw tematom"
+    },
+    "translation": {
+      "label": "Model Tłumaczenia",
+      "modelDesc": "Określ model używany do tłumaczenia",
+      "title": "Ustawienia Asystenta Tłumaczenia"
+    }
+  },
   "tab": {
     "about": "O nas",
     "agent": "Domyślny asystent",
     "common": "Ustawienia ogólne",
+    "experiment": "Eksperyment",
     "llm": "Model językowy",
+    "sync": "Synchronizacja w chmurze",
+    "system-agent": "System Assistant",
     "tts": "Usługa głosowa"
   },
   "tools": {

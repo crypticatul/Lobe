@@ -86,6 +86,13 @@ describe('createErrorResponse', () => {
       expect(response.status).toBe(476);
     });
 
+    // 测试 OpenRouterBizError 错误类型返回477状态码
+    it('returns a 477 status for OpenRouterBizError error type', () => {
+      const errorType = AgentRuntimeErrorType.OpenRouterBizError;
+      const response = createErrorResponse(errorType);
+      expect(response.status).toBe(477);
+    });
+
     // 测试 OllamaBizError 错误类型返回478状态码
     it('returns a 478 status for OllamaBizError error type', () => {
       const errorType = AgentRuntimeErrorType.OllamaBizError;
@@ -114,6 +121,23 @@ describe('createErrorResponse', () => {
       expect(response.status).toBe(481);
     });
 
+    it('returns a 484 status for TogetherAIBizError error type', () => {
+      const errorType = AgentRuntimeErrorType.TogetherAIBizError;
+      const response = createErrorResponse(errorType);
+      expect(response.status).toBe(484);
+    });
+
+    it('returns a 485 status for MinimaxBizError error type', () => {
+      const errorType = AgentRuntimeErrorType.MinimaxBizError;
+      const response = createErrorResponse(errorType);
+      expect(response.status).toBe(485);
+    });
+
+    it('returns a 486 status for DeepSeekBizError error type', () => {
+      const errorType = AgentRuntimeErrorType.DeepSeekBizError;
+      const response = createErrorResponse(errorType);
+      expect(response.status).toBe(486);
+    });
   });
 
   // 测试状态码不在200-599范围内的情况

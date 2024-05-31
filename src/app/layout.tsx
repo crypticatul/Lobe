@@ -1,47 +1,41 @@
+import { SpeedInsights } from '@vercel/speed-insights/next';
 import { ResolvingViewport } from 'next';
 import { cookies } from 'next/headers';
-import { PropsWithChildren } from 'react';
+import { ReactNode } from 'react';
 import { isRtlLang } from 'rtl-detect';
 
 import Analytics from '@/components/Analytics';
-import { getServerConfig } from '@/config/server';
 import { DEFAULT_LANG, LOBE_LOCALE_COOKIE } from '@/const/locale';
-import {
-  LOBE_THEME_APPEARANCE,
-  LOBE_THEME_NEUTRAL_COLOR,
-  LOBE_THEME_PRIMARY_COLOR,
-} from '@/const/theme';
-import Layout from '@/layout/GlobalLayout';
+import PWAInstall from '@/features/PWAInstall';
+import AuthProvider from '@/layout/AuthProvider';
+import GlobalProvider from '@/layout/GlobalProvider';
 import { isMobileDevice } from '@/utils/responsive';
 
-import StyleRegistry from './StyleRegistry';
+const inVercel = process.env.VERCEL === '1';
 
-const { ENABLE_OAUTH_SSO } = getServerConfig();
+type RootLayoutProps = {
+  children: ReactNode;
+  modal: ReactNode;
+};
 
-const RootLayout = ({ children }: PropsWithChildren) => {
-  // get default theme config to use with ssr
+const RootLayout = async ({ children, modal }: RootLayoutProps) => {
   const cookieStore = cookies();
-  const appearance = cookieStore.get(LOBE_THEME_APPEARANCE);
-  const neutralColor = cookieStore.get(LOBE_THEME_NEUTRAL_COLOR);
-  const primaryColor = cookieStore.get(LOBE_THEME_PRIMARY_COLOR);
+
   const lang = cookieStore.get(LOBE_LOCALE_COOKIE);
   const direction = isRtlLang(lang?.value || DEFAULT_LANG) ? 'rtl' : 'ltr';
 
   return (
     <html dir={direction} lang={lang?.value || DEFAULT_LANG} suppressHydrationWarning>
       <body>
-        <StyleRegistry>
-          <Layout
-            defaultAppearance={appearance?.value}
-            defaultLang={lang?.value}
-            defaultNeutralColor={neutralColor?.value as any}
-            defaultPrimaryColor={primaryColor?.value as any}
-            enableOAuthSSO={ENABLE_OAUTH_SSO}
-          >
+        <GlobalProvider>
+          <AuthProvider>
             {children}
-          </Layout>
-        </StyleRegistry>
+            {modal}
+          </AuthProvider>
+          <PWAInstall />
+        </GlobalProvider>
         <Analytics />
+        {inVercel && <SpeedInsights />}
       </body>
     </html>
   );
@@ -49,7 +43,7 @@ const RootLayout = ({ children }: PropsWithChildren) => {
 
 export default RootLayout;
 
-export { default as metadata } from './metadata';
+export { generateMetadata } from './metadata';
 
 export const generateViewport = async (): ResolvingViewport => {
   const isMobile = isMobileDevice();

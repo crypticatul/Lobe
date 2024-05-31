@@ -57,3 +57,6 @@ next-env.d.ts
 public/*.js
 bun.lockb
 sitemap*.xml
+robots.txt
+
+*.patch

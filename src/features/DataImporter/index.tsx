@@ -1,19 +1,30 @@
+'use client';
+
 import { Icon } from '@lobehub/ui';
 import { Button, Result, Table, Upload } from 'antd';
 import { createStyles } from 'antd-style';
 import { CheckCircle, ImportIcon } from 'lucide-react';
-import React, { ReactNode, memo, useState } from 'react';
+import React, { ReactNode, memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
 import DataStyleModal from '@/components/DataStyleModal';
-import { useImportConfig } from '@/hooks/useImportConfig';
 import { ImportResult, ImportResults } from '@/services/config';
+
+import { useImportConfig } from './useImportConfig';
 
 const useStyles = createStyles(({ css, token }) => {
   const size = 28;
 
   return {
+    children: css`
+      &::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background-color: transparent;
+      }
+    `,
     loader: css`
       transform: translateX(-${size * 2}px);
 
@@ -116,6 +127,9 @@ const useStyles = createStyles(({ css, token }) => {
         }
       }
     `,
+    wrapper: css`
+      font-size: inherit;
+    `,
   };
 });
 
@@ -132,11 +146,28 @@ interface DataImporterProps {
 }
 const DataImporter = memo<DataImporterProps>(({ children, onFinishImport }) => {
   const { t } = useTranslation('common');
-  const { importConfig } = useImportConfig();
+  const importConfig = useImportConfig();
   const [duration, setDuration] = useState(0);
   const [importState, setImportState] = useState(ImportState.Start);
   const [importData, setImportData] = useState<ImportResults | undefined>();
   const { styles } = useStyles();
+
+  const dataSource = useMemo(() => {
+    if (!importData) return;
+
+    const { type, ...res } = importData;
+
+    if (type === 'settings') return;
+
+    return Object.entries(res)
+      .filter(([, v]) => !!v)
+      .map(([item, value]: [string, ImportResult]) => ({
+        added: value.added,
+        error: value.errors,
+        skips: value.skips,
+        title: t(`importModal.result.${item as keyof ImportResults}`),
+      }));
+  }, [importData]);
 
   return (
     <>
@@ -174,7 +205,7 @@ const DataImporter = memo<DataImporterProps>(({ children, onFinishImport }) => {
               style={{ paddingBlock: 24 }}
               subTitle={
                 // if there is no importData, means it's only import the settings
-                !importData ? (
+                !dataSource ? (
                   t('importModal.finish.onlySettings')
                 ) : (
                   <Flexbox gap={16} width={400}>
@@ -187,14 +218,7 @@ const DataImporter = memo<DataImporterProps>(({ children, onFinishImport }) => {
                         { dataIndex: 'skips', title: t('importModal.result.skips') },
                         { dataIndex: 'error', title: t('importModal.result.errors') },
                       ]}
-                      dataSource={Object.entries(importData).map(
-                        ([item, value]: [string, ImportResult]) => ({
-                          added: value.added,
-                          error: value.errors,
-                          skips: value.skips,
-                          title: t(`importModal.result.${item as keyof ImportResults}`),
-                        }),
-                      )}
+                      dataSource={dataSource}
                       pagination={false}
                       size={'small'}
                     />
@@ -228,10 +252,12 @@ const DataImporter = memo<DataImporterProps>(({ children, onFinishImport }) => {
 
           return false;
         }}
+        className={styles.wrapper}
         maxCount={1}
         showUploadList={false}
       >
-        {children}
+        {/* a very hackable solution: add a pseudo before to have a large hot zone */}
+        <div className={styles.children}>{children}</div>
       </Upload>
     </>
   );

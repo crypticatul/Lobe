@@ -1,5 +1,6 @@
 // @vitest-environment edge-runtime
-import { GenerateContentRequest, GenerateContentStreamResult, Part } from '@google/generative-ai';
+import { FunctionDeclarationSchemaType } from '@google/generative-ai';
+import { JSONSchema7 } from 'json-schema';
 import OpenAI from 'openai';
 import { Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -317,17 +318,55 @@ describe('LobeGoogleAI', () => {
     });
 
     describe('buildGoogleMessages', () => {
-      it('should use default text model when no images are included in messages', () => {
+      it('get default result with gemini-pro', () => {
+        const messages: OpenAIChatMessage[] = [{ content: 'Hello', role: 'user' }];
+
+        const contents = instance['buildGoogleMessages'](messages, 'gemini-pro');
+
+        expect(contents).toHaveLength(1);
+        expect(contents).toEqual([{ parts: [{ text: 'Hello' }], role: 'user' }]);
+      });
+
+      it('messages should end with user if using gemini-pro', () => {
         const messages: OpenAIChatMessage[] = [
           { content: 'Hello', role: 'user' },
           { content: 'Hi', role: 'assistant' },
         ];
-        const model = 'text-davinci-003';
 
-        // 调用 buildGoogleMessages 方法
-        const { contents, model: usedModel } = instance['buildGoogleMessages'](messages, model);
+        const contents = instance['buildGoogleMessages'](messages, 'gemini-pro');
 
-        expect(usedModel).toEqual('gemini-pro'); // 假设 'gemini-pro' 是默认文本模型
+        expect(contents).toHaveLength(3);
+        expect(contents).toEqual([
+          { parts: [{ text: 'Hello' }], role: 'user' },
+          { parts: [{ text: 'Hi' }], role: 'model' },
+          { parts: [{ text: '' }], role: 'user' },
+        ]);
+      });
+
+      it('should include system role if there is a system role prompt', () => {
+        const messages: OpenAIChatMessage[] = [
+          { content: 'you are ChatGPT', role: 'system' },
+          { content: 'Who are you', role: 'user' },
+        ];
+
+        const contents = instance['buildGoogleMessages'](messages, 'gemini-pro');
+
+        expect(contents).toHaveLength(3);
+        expect(contents).toEqual([
+          { parts: [{ text: 'you are ChatGPT' }], role: 'user' },
+          { parts: [{ text: '' }], role: 'model' },
+          { parts: [{ text: 'Who are you' }], role: 'user' },
+        ]);
+      });
+
+      it('should not modify the length if model is gemini-1.5-pro', () => {
+        const messages: OpenAIChatMessage[] = [
+          { content: 'Hello', role: 'user' },
+          { content: 'Hi', role: 'assistant' },
+        ];
+
+        const contents = instance['buildGoogleMessages'](messages, 'gemini-1.5-pro-latest');
+
         expect(contents).toHaveLength(2);
         expect(contents).toEqual([
           { parts: [{ text: 'Hello' }], role: 'user' },
@@ -348,9 +387,8 @@ describe('LobeGoogleAI', () => {
         const model = 'gemini-pro-vision';
 
         // 调用 buildGoogleMessages 方法
-        const { contents, model: usedModel } = instance['buildGoogleMessages'](messages, model);
+        const contents = instance['buildGoogleMessages'](messages, model);
 
-        expect(usedModel).toEqual(model);
         expect(contents).toHaveLength(1);
         expect(contents).toEqual([
           {
@@ -358,6 +396,207 @@ describe('LobeGoogleAI', () => {
             role: 'user',
           },
         ]);
+      });
+    });
+
+    describe('convertModel', () => {
+      it('should use default text model when no images are included in messages', () => {
+        const messages: OpenAIChatMessage[] = [
+          { content: 'Hello', role: 'user' },
+          { content: 'Hi', role: 'assistant' },
+        ];
+
+        // 调用 buildGoogleMessages 方法
+        const model = instance['convertModel']('gemini-pro-vision', messages);
+
+        expect(model).toEqual('gemini-pro'); // 假设 'gemini-pro' 是默认文本模型
+      });
+
+      it('should use specified model when images are included in messages', () => {
+        const messages: OpenAIChatMessage[] = [
+          {
+            content: [
+              { type: 'text', text: 'Hello' },
+              { type: 'image_url', image_url: { url: 'data:image/png;base64,...' } },
+            ],
+            role: 'user',
+          },
+        ];
+
+        const model = instance['convertModel']('gemini-pro-vision', messages);
+
+        expect(model).toEqual('gemini-pro-vision');
+      });
+    });
+
+    describe('buildGoogleTools', () => {
+      it('should return undefined when tools is undefined or empty', () => {
+        expect(instance['buildGoogleTools'](undefined)).toBeUndefined();
+        expect(instance['buildGoogleTools']([])).toBeUndefined();
+      });
+
+      it('should correctly convert ChatCompletionTool to GoogleFunctionCallTool', () => {
+        const tools: OpenAI.ChatCompletionTool[] = [
+          {
+            function: {
+              name: 'testTool',
+              description: 'A test tool',
+              parameters: {
+                type: 'object',
+                properties: {
+                  param1: { type: 'string' },
+                  param2: { type: 'number' },
+                },
+                required: ['param1'],
+              },
+            },
+            type: 'function',
+          },
+        ];
+
+        const googleTools = instance['buildGoogleTools'](tools);
+
+        expect(googleTools).toHaveLength(1);
+        expect(googleTools![0].functionDeclarations![0]).toEqual({
+          name: 'testTool',
+          description: 'A test tool',
+          parameters: {
+            type: FunctionDeclarationSchemaType.OBJECT,
+            properties: {
+              param1: { type: FunctionDeclarationSchemaType.STRING },
+              param2: { type: FunctionDeclarationSchemaType.NUMBER },
+            },
+            required: ['param1'],
+          },
+        });
+      });
+    });
+
+    describe('convertSchemaObject', () => {
+      it('should correctly convert object schema', () => {
+        const schema: JSONSchema7 = {
+          type: 'object',
+          properties: {
+            prop1: { type: 'string' },
+            prop2: { type: 'number' },
+          },
+        };
+
+        const converted = instance['convertSchemaObject'](schema);
+
+        expect(converted).toEqual({
+          type: FunctionDeclarationSchemaType.OBJECT,
+          properties: {
+            prop1: { type: FunctionDeclarationSchemaType.STRING },
+            prop2: { type: FunctionDeclarationSchemaType.NUMBER },
+          },
+        });
+      });
+
+      // 类似地添加 array/string/number/boolean 类型schema的测试用例
+      // ...
+
+      it('should correctly convert nested schema', () => {
+        const schema: JSONSchema7 = {
+          type: 'object',
+          properties: {
+            nested: {
+              type: 'array',
+              items: {
+                type: 'object',
+                properties: {
+                  prop: { type: 'string' },
+                },
+              },
+            },
+          },
+        };
+
+        const converted = instance['convertSchemaObject'](schema);
+
+        expect(converted).toEqual({
+          type: FunctionDeclarationSchemaType.OBJECT,
+          properties: {
+            nested: {
+              type: FunctionDeclarationSchemaType.ARRAY,
+              items: {
+                type: FunctionDeclarationSchemaType.OBJECT,
+                properties: {
+                  prop: { type: FunctionDeclarationSchemaType.STRING },
+                },
+              },
+            },
+          },
+        });
+      });
+    });
+
+    describe('convertOAIMessagesToGoogleMessage', () => {
+      it('should correctly convert assistant message', () => {
+        const message: OpenAIChatMessage = {
+          role: 'assistant',
+          content: 'Hello',
+        };
+
+        const converted = instance['convertOAIMessagesToGoogleMessage'](message);
+
+        expect(converted).toEqual({
+          role: 'model',
+          parts: [{ text: 'Hello' }],
+        });
+      });
+
+      it('should correctly convert user message', () => {
+        const message: OpenAIChatMessage = {
+          role: 'user',
+          content: 'Hi',
+        };
+
+        const converted = instance['convertOAIMessagesToGoogleMessage'](message);
+
+        expect(converted).toEqual({
+          role: 'user',
+          parts: [{ text: 'Hi' }],
+        });
+      });
+
+      it('should correctly convert message with inline base64 image parts', () => {
+        const message: OpenAIChatMessage = {
+          role: 'user',
+          content: [
+            { type: 'text', text: 'Check this image:' },
+            { type: 'image_url', image_url: { url: 'data:image/png;base64,...' } },
+          ],
+        };
+
+        const converted = instance['convertOAIMessagesToGoogleMessage'](message);
+
+        expect(converted).toEqual({
+          role: 'user',
+          parts: [
+            { text: 'Check this image:' },
+            { inlineData: { data: '...', mimeType: 'image/png' } },
+          ],
+        });
+      });
+      it.skip('should correctly convert message with image url parts', () => {
+        const message: OpenAIChatMessage = {
+          role: 'user',
+          content: [
+            { type: 'text', text: 'Check this image:' },
+            { type: 'image_url', image_url: { url: 'https://image-file.com' } },
+          ],
+        };
+
+        const converted = instance['convertOAIMessagesToGoogleMessage'](message);
+
+        expect(converted).toEqual({
+          role: 'user',
+          parts: [
+            { text: 'Check this image:' },
+            { inlineData: { data: '...', mimeType: 'image/png' } },
+          ],
+        });
       });
     });
   });

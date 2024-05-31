@@ -1,8 +1,28 @@
-import { Callout, Steps, Tabs } from 'nextra/components';
+---
+title: Deploy LobeChat with Docker Compose
+description: >-
+  Learn how to deploy the LobeChat service using Docker Compose. Follow
+  step-by-step instructions to install Docker, run the deployment command, and
+  set up automatic updates.
+tags:
+  - Docker Compose
+  - LobeChat Service
+  - Docker Deployment
+  - Automatic Updates
+  - Crontab Script
+---
 
 # Docker Compose Deployment Guide
 
-[![][docker-release-shield]][docker-release-link][![][docker-size-shield]][docker-size-link][![][docker-pulls-shield]][docker-pulls-link]
+<div style={{display:"flex", gap: 4}}>
+
+[![][docker-release-shield]][docker-release-link]
+
+[![][docker-size-shield]][docker-size-link]
+
+[![][docker-pulls-shield]][docker-pulls-link]
+
+</div>
 
 We provide a [Docker image][docker-release-link] for deploying the LobeChat service on your private device.
 
@@ -13,20 +33,22 @@ We provide a [Docker image][docker-release-link] for deploying the LobeChat serv
 (Skip this step if already installed)
 
 <Tabs items={['Ubuntu', 'CentOS']}>
-<Tabs.Tab>
+
+<Tab>
 
 ```fish
 $ apt install docker.io
 ```
 
-</Tabs.Tab>
-<Tabs.Tab>
+</Tab>
+
+<Tab>
 
 ```fish
 $ yum install docker
 ```
 
-</Tabs.Tab>
+</Tab>
 
 </Tabs>
 

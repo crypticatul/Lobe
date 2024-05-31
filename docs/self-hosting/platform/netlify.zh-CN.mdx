@@ -1,4 +1,15 @@
-import { Callout, Steps } from 'nextra/components';
+---
+title: 在 Netlify 上部署 LobeChat
+description: >-
+  学习如何在 Netlify 上部署 LobeChat，包括 Fork 仓库、准备 OpenAI API Key、导入到 Netlify
+  工作台、配置站点名称与环境变量等步骤。
+tags:
+  - Netlify
+  - LobeChat
+  - 部署教程
+  - OpenAI API Key
+  - 环境配置
+---
 
 # 使用 Netlify 部署
 
@@ -7,8 +18,7 @@ import { Callout, Steps } from 'nextra/components';
 ## Netlify 部署 LobeChat
 
 <Steps>
-
-### Fork LobeChat 仓库
+  ### Fork LobeChat 仓库
 
 点击 Fork 按钮，将 LobeChat 仓库 Fork 到你的 GitHub 账号下。
 
@@ -16,7 +26,7 @@ import { Callout, Steps } from 'nextra/components';
 
 前往 [OpenAI API Key](https://platform.openai.com/account/api-keys) 获取你的 OpenAI API Key
 
-### 在 Netflix 工作台导入
+### 在 Netlify 工作台导入
 
 <Callout>经过测试，暂不支持类似 Vercel/Zeabur 的一键部署按钮，原因未知。因此需要手动导入</Callout>
 
@@ -24,42 +34,27 @@ import { Callout, Steps } from 'nextra/components';
 
 <Image
   alt={'在 Netflix 工作台点击 「Import from git」'}
-  src={'https://github.com/lobehub/lobe-chat/assets/28616219/31b999e5-2a74-45fc-935b-f036e72a684d'}
-  bordered
-  inStep
   height={362}
+  inStep
+  src={'https://github.com/lobehub/lobe-chat/assets/28616219/31b999e5-2a74-45fc-935b-f036e72a684d'}
 />
 
 然后点击 「Deploy with Github」，并授权 Netlify 访问你的 GitHub 账号
 
 <Image
   alt={'授权 Netlify 访问你的 GitHub 账号'}
-  src={'https://github.com/lobehub/lobe-chat/assets/28616219/c9c58141-5ec6-43f1-8d97-0a84a04dcdba'}
-  bordered
-  inStep
   height={273}
+  inStep
+  src={'https://github.com/lobehub/lobe-chat/assets/28616219/c9c58141-5ec6-43f1-8d97-0a84a04dcdba'}
 />
-
-[//]: # '[![][deploy-button-image]][deploy-link]'
-[//]: # '[deploy-button-image]: https://www.netlify.com/img/deploy/button.svg'
-[//]: # '[deploy-link]: https://app.netlify.com/start/deploy?repository=https://github.com/lobehub/lobe-chat'
-[//]: # '### 授权 Netlify 访问你的 GitHub 账号'
-[//]: # '点击 「Connect to GitHub」，授权 Netlify 访问你的 GitHub 账号：'
-[//]: # 'Image'
-[//]: # 'github.com/lobehub/lobe-chat/assets/28616219/8ee533d5-f7e9-4523-991b-2c23a72c1530'
-[//]: # '  bordered'
-[//]: # '  width={790}'
-[//]: # '  height={556}'
-[//]: # '/>'
 
 然后选择 LobeChat 项目：
 
 <Image
   alt={'选择 LobeChat github 项目'}
-  src={'https://github.com/lobehub/lobe-chat/assets/28616219/6c3968a8-fbbb-4268-a587-edaced2d96af'}
-  bordered
-  inStep
   height={228}
+  inStep
+  src={'https://github.com/lobehub/lobe-chat/assets/28616219/6c3968a8-fbbb-4268-a587-edaced2d96af'}
 />
 
 ### 配置站点名称与环境变量
@@ -68,20 +63,18 @@ import { Callout, Steps } from 'nextra/components';
 
 <Image
   alt={'配置 LobeChat 站点名称'}
-  src={'https://github.com/lobehub/lobe-chat/assets/28616219/f3885537-6d43-422f-b1b8-e70732401025'}
-  bordered
-  inStep
   height={712}
+  inStep
+  src={'https://github.com/lobehub/lobe-chat/assets/28616219/f3885537-6d43-422f-b1b8-e70732401025'}
 />
 
 点击 「Add environment variables」按钮，添加站点环境变量：
 
 <Image
   alt={'添加 LobeChat 站点环境变量'}
-  src={'https://github.com/lobehub/lobe-chat/assets/28616219/3b607482-4d99-455a-bc10-3090dd4fe3c5'}
-  bordered
-  inStep
   height={537}
+  inStep
+  src={'https://github.com/lobehub/lobe-chat/assets/28616219/3b607482-4d99-455a-bc10-3090dd4fe3c5'}
 />
 
 以配置 OpenAI 为例，你需要添加的环境变量如下：
@@ -92,18 +85,17 @@ import { Callout, Steps } from 'nextra/components';
 | `ACCESS_CODE` | 必选 | 添加访问此服务的密码，你可以设置一个长密码以防被爆破，该值用逗号分隔时为密码数组 | `awCT74` 或 `e3@09!` or `code1,code2,code3` |
 | `OPENAI_PROXY_URL` | 可选 | 如果你手动配置了 OpenAI 接口代理，可以使用此配置项来覆盖默认的 OpenAI API 请求基础 URL | `https://aihubmix.com/v1` ，默认值：`https://api.openai.com/v1` |
 
-<Callout type={'info'}>
-  LobeChat 支持的完整环境变量列表请参考 [📘 环境变量](/zh/self-hosting/environment-variables) 部分
+<Callout type={'tip'}>
+  LobeChat 支持的完整环境变量列表请参考 [📘 环境变量](/docs/self-hosting/environment-variables) 部分
 </Callout>
 
 添加完成后，最后点击「Deploy lobe-chat」 进入部署阶段。
 
 <Image
   alt={'环境变量添加完成'}
-  src={'https://github.com/lobehub/lobe-chat/assets/28616219/c9f74ec4-ce63-4ce9-b9e2-34bda6fda10b'}
-  bordered
-  inStep
   height={600}
+  inStep
+  src={'https://github.com/lobehub/lobe-chat/assets/28616219/c9f74ec4-ce63-4ce9-b9e2-34bda6fda10b'}
 />
 
 ### 等待部署完成
@@ -112,53 +104,43 @@ import { Callout, Steps } from 'nextra/components';
 
 <Image
   alt={'Netlify 站点详情页'}
-  src={'https://github.com/lobehub/lobe-chat/assets/28616219/a7fd85d5-fd32-4756-814e-ff7ab7567fe1'}
-  bordered
-  inStep
   height={396}
+  inStep
+  src={'https://github.com/lobehub/lobe-chat/assets/28616219/a7fd85d5-fd32-4756-814e-ff7ab7567fe1'}
 />
 
 进入部署详情，你会看到下述界面，这意味着你的 LobeChat 正在部署中，只需等待部署完成即可。
 
 <Image
   alt={'LobeChat 部署构建中'}
-  src={'https://github.com/lobehub/lobe-chat/assets/28616219/1ed8b13d-046e-47c8-bd61-116ffdf5d01b'}
-  bordered
-  inStep
   height={325}
+  inStep
+  src={'https://github.com/lobehub/lobe-chat/assets/28616219/1ed8b13d-046e-47c8-bd61-116ffdf5d01b'}
 />
 
 部署构建过程中：
 
 <Image
   alt={'部署构建中'}
-  src={'https://github.com/lobehub/lobe-chat/assets/28616219/1c82d707-cb6f-4924-b246-a5235a919864'}
-  bordered
-  inStep
   height={558}
+  inStep
+  src={'https://github.com/lobehub/lobe-chat/assets/28616219/1c82d707-cb6f-4924-b246-a5235a919864'}
 />
+
 ### 部署成功，开始使用
 
 如果你的界面中的 Deploy Log 如下所示，意味着你的 LobeChat 部署成功了。
 
 <Image
   alt={'部署成功'}
-  src={'https://github.com/lobehub/lobe-chat/assets/28616219/c1f945d1-f3e2-4100-b6bb-24d4cb13c438'}
-  bordered
-  inStep
   height={558}
+  inStep
+  src={'https://github.com/lobehub/lobe-chat/assets/28616219/c1f945d1-f3e2-4100-b6bb-24d4cb13c438'}
 />
 
 此时，你可以点击「Open production deploy」，即可访问你的 LobeChat 站点
 
-<Image
-  alt={'访问你的 LobeChat 站点'}
-  src={'https://github.com/lobehub/lobe-chat/assets/28616219/b04723eb-64ad-4028-a901-dc4e4ee2d0c1'}
-  bordered
-  inStep
-  height={527}
-/>
-
+  <Image alt={'访问你的 LobeChat 站点'} height={527} inStep src={'https://github.com/lobehub/lobe-chat/assets/28616219/b04723eb-64ad-4028-a901-dc4e4ee2d0c1'} />
 </Steps>
 
 ## 绑定自定义域名（可选）
